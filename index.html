@@ -3,38 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InternSure — Internship Risk Analyzer</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
+    <title>Internsure AI – Internship Verification & Risk Assessment System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<!-- Background -->
-<div class="bg-glow"></div>
+    <nav>
+        <div class="logo">Internsure AI</div>
+        <ul class="nav-links">
+            <li><a href="#about">About System</a></li>
+            <li><a href="#verify">Analyze Risks</a></li>
+            <li><a href="#insights">Common Scams</a></li>
+        </ul>
+    </nav>
 
-<header class="header">
-    <div class="logo">InternSure</div>
+    <section class="hero-section" id="hero">
+        <div class="container hero-content">
+            <h1 class="hero-title">Assess Systemic Risks & <span>Avoid Fake Opportunities</span></h1>
+            <p class="hero-subtitle"><span id="typewriter"></span><span class="cursor"></span></p>
+            <button class="btn-cta" onclick="document.getElementById('verify').scrollIntoView();">Check Internship Risk</button>
+        </div>
+    </section>
 
-    <div id="progress-container" class="progress hidden">
-        <div class="bar"><div id="progress-bar"></div></div>
-        <span id="page-progress">Step 1/11</span>
-    </div>
-</header>
+    <section class="container" id="about">
+        <h2 class="section-title">Algorithmic Risk Metrics</h2>
+        <p class="section-subtitle">Internsure AI breaks down systemic signals, application integrity points, and organizational parameters to evaluate exposure matrices before submission.</p>
+        
+        <div class="grid-3">
+            <div class="card">
+                <span class="step-num">01</span>
+                <h3>Provide Indicators</h3>
+                <p>Input critical corporate details such as infrastructure verification addresses, domain metrics, and structural requests.</p>
+            </div>
+            <div class="card">
+                <span class="step-num">02</span>
+                <h3>Heuristic Modeling</h3>
+                <p>The rules-based parser checks systemic anomalies, functional attributes, registration fees, and domain alignment strings.</p>
+            </div>
+            <div class="card">
+                <span class="step-num">03</span>
+                <h3>Safety Scoring</h3>
+                <p>Obtain an actionable evaluation rating complete with transparent verification flags categorized dynamically.</p>
+            </div>
+        </div>
+    </section>
 
-<main>
-    <div id="wizard-render-engine"></div>
-</main>
+    <section class="container" id="verify">
+        <h2 class="section-title">Opportunity Assessment Hub</h2>
+        <p class="section-subtitle" style="margin-bottom: 3rem;">Fill in the profile details below to verify tracking vectors and generate an instantaneous analytics report.</p>
+        
+        <div class="workspace-grid">
+            <div class="card">
+                <form id="riskForm">
+                    <div class="form-group">
+                        <label for="companyName">Company Name *</label>
+                        <input type="text" id="companyName" required placeholder="e.g., TechNova Solutions">
+                    </div>
+                    <div class="form-group">
+                        <label for="websiteUrl">Official Website URL</label>
+                        <input type="url" id="websiteUrl" placeholder="e.g., https://technova.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="hrEmail">HR Email ID *</label>
+                        <input type="email" id="hrEmail" required placeholder="e.g., careers@technova.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="linkedinUrl">LinkedIn Corporate URL</label>
+                        <input type="url" id="linkedinUrl" placeholder="e.g., linkedin.com/company/... (optional)">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="jobTitle">Internship Track Title *</label>
+                        <input type="text" id="jobTitle" required placeholder="e.g., Frontend Developer Intern">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="regFee">Is a Security Deposit / Registration Fee Required? *</label>
+                        <select id="regFee" required>
+                            <option value="">-- Make Selection --</option>
+                            <option value="no">No, entirely performance or unpaid tracking matrix</option>
+                            <option value="yes">Yes, mandatory upfront application payment</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="comments">Additional Context/Observations</label>
+                        <textarea id="comments" placeholder="Describe the application process, interview style, or onboarding demands..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Execute Integrity Analysis</button>
+                </form>
+            </div>
 
-<footer>
-    InternSure — AI Internship Risk Checker
-</footer>
+            <div class="dashboard-container" id="dashboard">
+                <div class="dashboard-empty" id="dashEmpty">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <h3>Awaiting Assessment Parameters</h3>
+                    <p>Provide validation signals in the primary data engine form to initiate calculation rulesets.</p>
+                </div>
 
-<script src="script.js"></script>
+                <div class="dashboard-active" id="dashActive">
+                    <div class="status-badge" id="riskBadge">Low Risk</div>
+                    
+                    <div class="meter-container">
+                        <div class="score-circle" id="scoreCircle">
+                            <span class="score-text" id="scoreText">0</span>
+                        </div>
+                        <div>
+                            <h3 id="resCompanyTitle">Company Context</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;" id="resJobTitle">Track Role</p>
+                        </div>
+                    </div>
+
+                    <div class="report-section">
+                        <h4>Audit Verification Breakdown</h4>
+                        <ul class="reasons-list" id="reasonsLog">
+                            </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container" id="insights">
+        <h2 class="section-title">Common Exploitation Vectors</h2>
+        <p class="section-subtitle">Real-world fraudulent tracking matrices consistently mirror a finite cluster of red flags.</p>
+        
+        <div class="scam-grid">
+            <div class="scam-card">
+                <h3>⚠️ Mandatory Capital Demands</h3>
+                <p>Authentic platforms offer compensation models. Upfront platform administration, certification, or kit fees are classic entry exploits.</p>
+            </div>
+            <div class="scam-card">
+                <h3>💬 Decentralized Chat Pipeline</h3>
+                <p>Hiring sequences confined strictly to platforms like WhatsApp or Telegram lack verified corporate infrastructure controls.</p>
+            </div>
+            <div class="scam-card">
+                <h3>🌐 Phantom Domain Footprint</h3>
+                <p>Absence of a verifiable corporate landing page, or tracking via lookalike addresses, signals operational evasion.</p>
+            </div>
+            <div class="scam-card">
+                <h3>⚡ Zero-Friction Selection</h3>
+                <p>Offers distributed immediately without structured assessment stages are utilized to mass-onboard targeted populations for data farming.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="disclaimer-box">
+            <h3>Regulatory & Functional Disclaimer</h3>
+            <p>This platform delivers a preliminary calculation vector based exclusively on user-supplied configuration input parameters and rule-based heuristic patterns. It does not certify, guarantee, or establish structural legal integrity, authenticity, or complete non-viability of any specific entity or internship track. Users must perform manual, empirical, external due diligence before processing documents or capital investments.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Internsure AI System. Maintained as an open portfolio sandbox environment.</p>
+            <div class="footer-links">
+                <a href="#">Portfolio Gateway</a>
+                <a href="#">Repository Node</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
- 
