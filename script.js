@@ -1,225 +1,123 @@
-// ==========================================
-// BONUS FEATURE: TYPEWRITER EFFECT
-// ==========================================
-const phrases = [
-    "Detect Internship Risks Using Analytics Logic.",
-    "Verify Domain Anchors & Processing Demands.",
-    "Evaluate Infrastructure Signals Dynamically."
-];
-let phraseIdx = 0;
-let charIdx = 0;
-let currentPhrase = '';
-let isDeleting = false;
-const typewriterSpan = document.getElementById('typewriter');
+document.addEventListener("DOMContentLoaded", function () {
 
-function typeLoop() {
-    currentPhrase = phrases[phraseIdx];
-    if (isDeleting) {
-        typewriterSpan.textContent = currentPhrase.substring(0, charIdx - 1);
-        charIdx--;
-    } else {
-        typewriterSpan.textContent = currentPhrase.substring(0, charIdx + 1);
-        charIdx++;
+    // ---------------- TYPEWRITER ----------------
+    const text = "Rule-based internship risk evaluation system powered by heuristic analysis.";
+    let i = 0;
+
+    function typeWriter() {
+        if (i < text.length) {
+            document.getElementById("typewriter").innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typeWriter, 25);
+        }
     }
+    typeWriter();
 
-    let typeSpeed = isDeleting ? 30 : 60;
+    // ---------------- FORM ----------------
+    const form = document.getElementById("riskForm");
 
-    if (!isDeleting && charIdx === currentPhrase.length) {
-        typeSpeed = 2000; // Hold the phrase string visible
-        isDeleting = true;
-    } else if (isDeleting && charIdx === 0) {
-        isDeleting = false;
-        phraseIdx = (phraseIdx + 1) % phrases.length;
-        typeSpeed = 500;
-    }
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-    setTimeout(typeLoop, typeSpeed);
-}
+        let company = document.getElementById("companyName").value;
+        let website = document.getElementById("websiteUrl").value;
+        let email = document.getElementById("hrEmail").value;
+        let linkedin = document.getElementById("linkedinUrl").value;
+        let title = document.getElementById("jobTitle").value;
+        let fee = document.getElementById("regFee").value;
 
-document.addEventListener("DOMContentLoaded", () => typeLoop());
+        let score = 0;
+        let reasons = [];
 
+        // ---------------- WEBSITE ----------------
+        if (website && website.includes("http")) {
+            score += 25;
+            reasons.push("✔ Official website provided");
+        }
 
-// ==========================================
-// MAIN RISK ANALYSIS ENGINE
-// ==========================================
-const form = document.getElementById('riskForm');
+        // ---------------- EMAIL DOMAIN CHECK ----------------
+        if (email && website) {
+            try {
+                let domain = website.replace("https://", "")
+                                     .replace("http://", "")
+                                     .split("/")[0];
 
-form.addEventListener('submit', function(e) {
-    e.preventDefault();
+                if (email.includes(domain)) {
+                    score += 25;
+                    reasons.push("✔ Email domain matches company domain");
+                } else {
+                    reasons.push("⚠ Email domain mismatch detected");
+                }
+            } catch (err) {}
+        }
 
-    // Extract values from input forms
-    const companyName = document.getElementById('companyName').value.trim();
-    const websiteUrl = document.getElementById('websiteUrl').value.trim();
-    const hrEmail = document.getElementById('hrEmail').value.trim();
-    const linkedinUrl = document.getElementById('linkedinUrl').value.trim();
-    const jobTitle = document.getElementById('jobTitle').value.trim();
-    const regFee = document.getElementById('regFee').value;
-
-    let internalScore = 0;
-    let logArr = [];
-
-    // Rule 1: Required Structural Base Fields Filled (+10)
-    if(companyName && hrEmail && jobTitle && regFee) {
-        internalScore += 10;
-        logArr.push({ text: "Primary infrastructure data vectors populated.", positive: true });
-    }
-
-    // Rule 2: Corporate URL Presence Evaluation (+25)
-    if(websiteUrl && isValidUrl(websiteUrl)) {
-        internalScore += 25;
-        logArr.push({ text: "Independent operational website profile URL defined.", positive: true });
-    } else {
-        logArr.push({ text: "Missing or unformatted corporate website anchor.", positive: false });
-    }
-
-    // Rule 3: Cross-Domain Architecture Coordination Match (+25)
-    if(websiteUrl && hrEmail) {
-        const domainExtracted = extractDomain(websiteUrl);
-        const emailExtracted = extractDomainFromEmail(hrEmail);
-        const publicDomains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'];
-        
-        if(domainExtracted && emailExtracted && domainExtracted === emailExtracted && !publicDomains.includes(emailExtracted)) {
-            internalScore += 25;
-            logArr.push({ text: `Domain coordination match verified (${domainExtracted}).`, positive: true });
+        // ---------------- LINKEDIN ----------------
+        if (linkedin) {
+            score += 20;
+            reasons.push("✔ LinkedIn company page provided");
         } else {
-            let errMsg = "Email domain mismatch vs corporate structural URL address.";
-            if(publicDomains.includes(emailExtracted)) {
-                errMsg += " (Utilizing public structural host nodes like Gmail).";
-            }
-            logArr.push({ text: errMsg, positive: false });
+            reasons.push("⚠ No LinkedIn presence detected");
         }
-    } else {
-        logArr.push({ text: "Incomplete dataset mapping to run deep domain evaluation.", positive: false });
-    }
 
-    // Rule 4: Professional Network Identity Metrics (+20)
-    if(linkedinUrl && isValidUrl(linkedinUrl) && linkedinUrl.toLowerCase().includes('linkedin.com')) {
-        internalScore += 20;
-        logArr.push({ text: "Corporate LinkedIn social index verification parameter logged.", positive: true });
-    } else {
-        logArr.push({ text: "No corporate LinkedIn professional validation array provided.", positive: false });
-    }
-
-    // Rule 5: Commercial Application Constraints Handling (+20)
-    if(regFee === 'no') {
-        internalScore += 20;
-        logArr.push({ text: "No immediate processing capital requirements demanded.", positive: true });
-    } else {
-        logArr.push({ text: "ALERT: Upfront fee registration requirements flagged. High operational exposure profile risk.", positive: false });
-    }
-
-    // Pass metrics downstream to update layout dashboards
-    renderDashboardResults(internalScore, logArr, companyName, jobTitle);
-});
-
-
-// ==========================================
-// ENGINE HELPER UTILITIES
-// ==========================================
-function isValidUrl(str) {
-    try {
-        new URL(str);
-        return true;
-    } catch (_) {
-        return false;  
-    }
-}
-
-function extractDomain(urlStr) {
-    try {
-        if(!/^https?:\/\//i.test(urlStr)) {
-            urlStr = 'http://' + urlStr;
+        // ---------------- FEE CHECK ----------------
+        if (fee === "no") {
+            score += 20;
+            reasons.push("✔ No registration fee required");
+        } else {
+            reasons.push("⚠ Upfront payment request detected");
         }
-        const url = new URL(urlStr);
-        let hostname = url.hostname;
-        if (hostname.startsWith('www.')) {
-            hostname = hostname.substring(4);
+
+        // ---------------- COMPLETENESS ----------------
+        if (company && email && title) {
+            score += 10;
+            reasons.push("✔ Complete internship details provided");
+        } else {
+            reasons.push("⚠ Missing mandatory information fields");
         }
-        return hostname.toLowerCase();
-    } catch(e) {
-        return null;
-    }
-}
 
-function extractDomainFromEmail(emailStr) {
-    const parts = emailStr.split('@');
-    return parts.length > 1 ? parts[1].toLowerCase() : null;
-}
+        if (score > 100) score = 100;
 
+        // ---------------- RISK LEVEL ----------------
+        let riskText = "";
+        let color = "";
 
-// ==========================================
-// DASHBOARD VIEWPORT RENDERING MECHANICS
-// ==========================================
-function renderDashboardResults(score, logs, company, role) {
-    const emptyState = document.getElementById('dashEmpty');
-    const activeState = document.getElementById('dashActive');
-    const badge = document.getElementById('riskBadge');
-    const scoreTxt = document.getElementById('scoreText');
-    const circle = document.getElementById('scoreCircle');
-    const resComp = document.getElementById('resCompanyTitle');
-    const resJob = document.getElementById('resJobTitle');
-    const reasonsLog = document.getElementById('reasonsLog');
+        if (score >= 80) {
+            riskText = "LOW RISK";
+            color = "#22c55e";
+        } else if (score >= 50) {
+            riskText = "MEDIUM RISK";
+            color = "#facc15";
+        } else {
+            riskText = "HIGH RISK";
+            color = "#ef4444";
+        }
 
-    // Toggle active interface states
-    emptyState.style.display = 'none';
-    activeState.style.display = 'block';
+        // ---------------- UI UPDATE ----------------
+        document.getElementById("dashEmpty").style.display = "none";
+        document.getElementById("dashActive").style.display = "block";
 
-    resComp.textContent = company;
-    resJob.textContent = role;
+        document.getElementById("scoreText").innerText = score;
 
-    // Reset log layout arrays
-    reasonsLog.innerHTML = '';
-    logs.forEach(log => {
-        const li = document.createElement('li');
-        li.textContent = log.text;
-        if(!log.positive) li.classList.add('negative');
-        reasonsLog.appendChild(li);
+        document.getElementById("riskBadge").innerText = riskText;
+        document.getElementById("riskBadge").style.background = color;
+
+        document.getElementById("resCompanyTitle").innerText = company;
+        document.getElementById("resJobTitle").innerText = title;
+
+        let list = document.getElementById("reasonsLog");
+        list.innerHTML = "";
+
+        reasons.forEach(r => {
+            let li = document.createElement("li");
+            li.innerText = r;
+            list.appendChild(li);
+        });
+
+        // ---------------- SCORE ANIMATION ----------------
+        let circle = document.getElementById("scoreCircle");
+        circle.style.background = `conic-gradient(${color} ${score * 3.6}deg, #1f2937 0deg)`;
     });
 
-    // Set properties based on calculated category thresholds
-    let badgeClass = 'badge-low';
-    let activeColor = '#10B981';
-    let label = 'Low Risk Exposure';
-
-    if(score >= 80) {
-        badgeClass = 'badge-low';
-        activeColor = 'var(--risk-low)';
-        label = '🟢 Low Risk (80-100)';
-    } else if(score >= 50) {
-        badgeClass = 'badge-medium';
-        activeColor = 'var(--risk-medium)';
-        label = '🟡 Medium Risk (50-79)';
-    } else {
-        badgeClass = 'badge-high';
-        activeColor = 'var(--risk-high)';
-        label = '🔴 High Risk (0-49)';
-    }
-
-    badge.className = `status-badge ${badgeClass}`;
-    badge.textContent = label;
-
-    // Dynamic dial counters
-    let currentDisplayScore = 0;
-    const duration = 800; 
-    const steps = score;
-    const increment = score === 0 ? 0 : duration / steps;
-
-    if(score === 0) {
-        scoreTxt.textContent = "0";
-        circle.style.background = `conic-gradient(var(--bg-input) 0deg, var(--bg-input) 360deg)`;
-    } else {
-        let interval = setInterval(() => {
-            currentDisplayScore++;
-            scoreTxt.textContent = currentDisplayScore;
-            
-            const degrees = (currentDisplayScore / 100) * 360;
-            circle.style.background = `conic-gradient(${activeColor} ${degrees}deg, var(--bg-input) ${degrees}deg)`;
-            
-            if(currentDisplayScore >= score) {
-                clearInterval(interval);
-            }
-        }, increment);
-    }
-}
+});
 
     
