@@ -1,45 +1,71 @@
-# 🛡️ InternSure — Internship Risk Assessment Tool
+# 🚀 InternSure — Internship Risk Checker
 
-InternSure is a student-built web app that helps users identify potential risks in internship offers and detect scam patterns before paying any fees.
+InternSure is a smart internship verification and risk analysis tool that helps students evaluate whether an internship offer is genuine, risky, or potentially fraudulent.
 
-## 🚀 Live Demo
-> Add your GitHub Pages link here  
-Example: https://yourusername.github.io/internsure/
-
----
-
-## 📌 About the Project
-
-Many students receive internship offers through WhatsApp, email, or social media that may involve hidden fees or scam patterns.
-
-**InternSure helps you:**
-- Analyze internship offers
-- Detect common scam red flags
-- Get a simple risk score (Low / Medium / High)
-- Make safer decisions before joining
-
-⚠️ Note: This tool is NOT an official verification system. It only provides pattern-based risk analysis.
+It uses a structured questionnaire-based scoring system to analyze multiple red flags like:
+- upfront payment demands  
+- fake recruitment channels  
+- lack of company credibility  
+- unrealistic offers  
+- missing documentation  
 
 ---
 
-## ✨ Features
+## 🌐 Live Demo
+https://your-username.github.io/internsure/
 
-- 🧠 Smart risk scoring system (0–100)
-- ⚠️ Detects scam patterns (fees, urgency, fake offers)
-- 📊 Instant result dashboard
-- 📱 Fully responsive UI
-- 🆓 No login required
-- 🔒 No data stored (privacy friendly)
+---
+
+## 📌 Features
+
+### 🧠 Smart Risk Assessment Engine
+- 10-step structured questionnaire system  
+- Weighted scoring model (0–100)  
+- Auto classification:
+  - 🟢 Low Risk  
+  - 🟡 Medium Risk  
+  - 🔴 High Risk  
+
+### ⚡ Interactive Wizard UI
+- Step-by-step guided flow  
+- Smooth animations & transitions  
+- Progress tracking bar  
+- Skip / back navigation support  
+
+### 🔍 Scam Detection Signals
+InternSure detects red flags like:
+- Upfront payment requests  
+- WhatsApp/Telegram recruitment  
+- No official email domain  
+- No interview process  
+- Missing offer letter  
+- Unrealistic salary offers  
+
+### 🎨 Modern UI/UX
+- Glassmorphism design  
+- Dark SaaS-style interface  
+- Mobile responsive layout  
+- Smooth micro-interactions  
 
 ---
 
 ## 🛠️ Tech Stack
 
-- HTML5
-- CSS3 (Custom styling)
-- JavaScript (for scoring logic)
-- Google Fonts
+- HTML5  
+- CSS3 (Glassmorphism UI)  
+- JavaScript (Vanilla)  
+- Tailwind CSS (CDN)  
+- Google Fonts (Plus Jakarta Sans)  
 
 ---
 
 ## 📂 Project Structure
+
+```
+InternSure/
+│
+├── index.html        # Main UI structure
+├── style.css         # Glassmorphism + animations
+├── script.js         # Risk engine + wizard logic
+└── README.md         # Documentation
+```
