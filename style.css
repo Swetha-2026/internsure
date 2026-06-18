@@ -1,50 +1,96 @@
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
     background-color: #03020a;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* Glassmorphic Panel Cards */
 .glass-card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.04) 0%,
+        rgba(255, 255, 255, 0.01) 100%
+    );
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+    border-radius: 16px;
 }
 
-/* Option Pill Items styling */
+/* Option Pills */
 .pill-option {
     transition: all 0.2s ease;
+    border-radius: 12px;
 }
 
 .pill-option:hover {
     background: rgba(255, 255, 255, 0.06);
     border-color: rgba(255, 255, 255, 0.18);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
 
-/* Glowing Neon CTA Button */
+/* Active selection glow effect */
+.pill-option:active {
+    transform: scale(0.98);
+}
+
+/* Glow Button */
 .glow-btn {
     transition: all 0.3s ease;
+    box-shadow: 0 0 0 rgba(6, 182, 212, 0);
 }
 
 .glow-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(6, 182, 212, 0.3);
+    box-shadow: 0 10px 30px rgba(6, 182, 212, 0.35);
 }
 
-/* Simple Reveal Animations */
+.glow-btn:active {
+    transform: scale(0.98);
+}
+
+/* Screen animation */
 .screen-fade-in {
-    animation: screenReveal 0.4s ease-out forwards;
+    animation: screenReveal 0.35s ease-out forwards;
 }
 
 @keyframes screenReveal {
     from {
         opacity: 0;
-        transform: translateY(8px);
+        transform: translateY(10px);
+        filter: blur(6px);
     }
     to {
         opacity: 1;
         transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* Smooth scroll behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Progress bar smooth transition fix */
+#progress-bar {
+    transition: width 0.4s ease-in-out;
+}
+
+/* Better button feel globally */
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Mobile optimization */
+@media (max-width: 480px) {
+    .glass-card {
+        padding: 14px;
+    }
+
+    .pill-option {
+        font-size: 12px;
     }
 }
