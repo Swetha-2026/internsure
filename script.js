@@ -1,4 +1,3 @@
-// Database definition containing all data and multi-step view objects
 const assessmentData = {
     companyName: "",
     internshipRole: "",
@@ -95,30 +94,29 @@ const assessmentData = {
             question: "Is the projected stipend structure heavily inflated compared to competitive enterprise standard baselines?",
             options: [
                 { text: "Yes, it is significantly higher than other options", score: 20, flag: "Stipend values are highly inflated above conventional averages." },
-                { text: "No, it sits within normal range guidelines", score: 0, flag: null }
+                { text: "No, it sits within normal range guidelines", score: 0, font: null }
             ]
         }
     ]
 };
 
-// Target DOM nodes
-const enginePortal = document.getElementById('wizard-render-engine');
-const progressContainer = document.getElementById('progress-container');
-const progressBar = document.getElementById('progress-bar');
-const progressText = document.getElementById('page-progress');
-
-// Main Render router engine mapping views dynamically based on current step index
 function updateWizardView() {
+    const enginePortal = document.getElementById('wizard-render-engine');
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('page-progress');
+
+    if (!enginePortal) return;
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    // Step 0: High-Fidelity Attractive Landing Home Screen
+    // Step 0: Landing Page
     if (assessmentData.currentStep === 0) {
-        progressContainer.classList.replace('flex', 'hidden');
+        if (progressContainer) progressContainer.style.display = 'none';
         
         enginePortal.innerHTML = `
-            <div class="text-center space-y-9 screen-fade-in py-4">
+            <div class="text-center space-y-8 screen-fade-in py-4">
                 <div class="space-y-4">
-                    <div class="inline-flex items-center space-x-2 bg-gradient-to-r from-indigo-500/10 to-blue-500/10 border border-indigo-500/20 px-3.5 py-1.5 rounded-full shadow-inner">
+                    <div class="inline-flex items-center space-x-2 bg-indigo-500/10 border border-indigo-500/20 px-3.5 py-1.5 rounded-full">
                         <span class="flex h-2 w-2 relative">
                           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
                           <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
@@ -126,7 +124,7 @@ function updateWizardView() {
                         <span class="text-[11px] font-semibold text-indigo-300 uppercase tracking-widest">Global Safety System v2.4</span>
                     </div>
                     <h1 class="text-4xl font-extrabold text-white tracking-tight sm:text-5xl leading-tight">
-                        Verify Your <br class="sm:hidden"><span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-indigo-400 to-blue-400">Internship Offer</span>
+                        Verify Your <br class="sm:hidden"><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-400 to-blue-400">Internship Offer</span>
                     </h1>
                     <p class="text-xs text-gray-400 max-w-sm mx-auto leading-relaxed font-medium">
                         Protect yourself from employment scams. Spend 2 minutes running an anonymous risk assessment before signing any contracts.
@@ -152,19 +150,10 @@ function updateWizardView() {
                             <p class="text-[11px] text-gray-500 mt-0.5">Skip signing up or entering accounts configuration data.</p>
                         </div>
                     </div>
-                    <div class="flex items-start space-x-3 text-xs text-gray-300">
-                        <div class="mt-0.5 flex h-5 w-5 items-center justify-center rounded-md bg-emerald-500/10 border border-emerald-500/20 shrink-0">
-                            <span class="text-emerald-400 font-bold">✓</span>
-                        </div>
-                        <div class="leading-tight">
-                            <p class="font-semibold text-white">Local Sandbox Operation</p>
-                            <p class="text-[11px] text-gray-500 mt-0.5">Your logs are parsed locally and never reach cloud storage.</p>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="pt-2">
-                    <button onclick="advanceStep(1)" class="glow-btn w-full max-w-xs py-4 bg-gradient-to-r from-cyan-400 via-teal-400 to-blue-500 rounded-xl font-bold text-gray-950 text-xs tracking-wider uppercase transition-all cursor-pointer">
+                    <button onclick="advanceStep(1)" class="glow-btn w-full max-w-xs py-4 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-xl font-bold text-gray-950 text-xs tracking-wider uppercase transition-all cursor-pointer">
                         Start Assessment
                     </button>
                 </div>
@@ -173,11 +162,14 @@ function updateWizardView() {
         return;
     }
 
-    // Step 1: Input Metadata Parameters View
+    // Step 1: Metadata Input Info
     if (assessmentData.currentStep === 1) {
-        progressContainer.classList.replace('hidden', 'flex');
-        progressBar.style.width = '8%';
-        progressText.innerText = `Step 1 of 11`;
+        if (progressContainer) {
+            progressContainer.style.display = 'flex';
+            progressContainer.classList.remove('hidden');
+        }
+        if (progressBar) progressBar.style.width = '8%';
+        if (progressText) progressText.innerText = `Step 1 of 11`;
 
         enginePortal.innerHTML = `
             <div class="space-y-6 screen-fade-in">
@@ -188,16 +180,16 @@ function updateWizardView() {
                 <div class="glass-card p-6 rounded-2xl space-y-5">
                     <div>
                         <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Company Name (Optional)</label>
-                        <input type="text" id="companyNameInput" value="${assessmentData.companyName}" placeholder="E.g., Highline Tech Solutions" class="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 focus:bg-white/10 transition-all">
+                        <input type="text" id="companyNameInput" value="${assessmentData.companyName}" placeholder="E.g., Highline Tech Solutions" class="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition-all">
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Internship Role (Optional)</label>
-                        <input type="text" id="internshipRoleInput" value="${assessmentData.internshipRole}" placeholder="E.g., Web Development Intern" class="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 focus:bg-white/10 transition-all">
+                        <input type="text" id="internshipRoleInput" value="${assessmentData.internshipRole}" placeholder="E.g., Web Development Intern" class="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-xs text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition-all">
                     </div>
                     
                     <div class="flex items-center space-x-3 pt-2">
-                        <button onclick="advanceStep(-1)" class="w-1/3 py-3.5 bg-white/5 hover:bg-white/10 text-xs font-bold text-gray-300 rounded-xl transition-all cursor-pointer">Back</button>
-                        <button onclick="saveMetadataAndContinue()" class="w-2/3 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white rounded-xl shadow-lg shadow-indigo-600/20 transition-all cursor-pointer">Continue →</button>
+                        <button onclick="advanceStep(-1)" class="w-1/3 py-3.5 bg-white/5 text-xs font-bold text-gray-300 rounded-xl transition-all cursor-pointer">Back</button>
+                        <button onclick="saveMetadataAndContinue()" class="w-2/3 py-3.5 bg-indigo-600 text-xs font-bold text-white rounded-xl transition-all cursor-pointer">Continue →</button>
                     </div>
                 </div>
             </div>
@@ -205,27 +197,27 @@ function updateWizardView() {
         return;
     }
 
-    // Steps 2 to 11: Render Questionnaire Module
+    // Steps 2 to 11: Render Questionnaire
     if (assessmentData.currentStep >= 2 && assessmentData.currentStep <= 11) {
         const questionIdx = assessmentData.currentStep - 2;
         const qObj = assessmentData.questions[questionIdx];
 
         const progressPercentage = Math.round((assessmentData.currentStep / 11) * 100);
-        progressBar.style.width = `${progressPercentage}%`;
-        progressText.innerText = `Step ${assessmentData.currentStep} of 11`;
+        if (progressBar) progressBar.style.width = `${progressPercentage}%`;
+        if (progressText) progressText.innerText = `Step ${assessmentData.currentStep} of 11`;
 
         let optionsHTML = "";
         qObj.options.forEach((opt, idx) => {
             const isChecked = assessmentData.answers[qObj.id]?.index === idx;
             optionsHTML += `
                 <button onclick="selectOption(${qObj.id}, ${idx}, ${opt.score}, '${opt.flag ? opt.flag.replace(/'/g, "\\'") : ''}')" 
-                    class="pill-option w-full p-4 rounded-xl border text-left text-xs transition-all flex items-center justify-between cursor-pointer ${
+                    class="pill-option w-full p-4 rounded-xl border text-left text-xs flex items-center justify-between cursor-pointer ${
                         isChecked 
-                        ? 'bg-gradient-to-r from-indigo-600/30 to-blue-600/30 border-indigo-500 text-white font-semibold shadow-inner' 
+                        ? 'bg-indigo-600/30 border-indigo-500 text-white font-semibold' 
                         : 'bg-white/5 border-white/10 text-gray-300'
                     }">
                     <span>${opt.text}</span>
-                    ${isChecked ? '<span class="text-indigo-400 text-sm font-bold animate-scale-up">✓</span>' : ''}
+                    ${isChecked ? '<span class="text-indigo-400 text-sm font-bold">✓</span>' : ''}
                 </button>
             `;
         });
@@ -245,8 +237,8 @@ function updateWizardView() {
                     </div>
 
                     <div class="flex items-center space-x-3 pt-2 border-t border-white/5">
-                        <button onclick="advanceStep(-1)" class="w-1/2 py-3.5 bg-white/5 hover:bg-white/10 text-xs font-bold text-gray-300 rounded-xl transition-all cursor-pointer">Previous</button>
-                        <button onclick="forceNextQuestion(${qObj.id})" class="w-1/2 py-3.5 bg-indigo-600/20 hover:bg-indigo-500/30 border border-indigo-500/20 text-xs font-bold text-indigo-300 rounded-xl transition-all cursor-pointer">Skip / Next</button>
+                        <button onclick="advanceStep(-1)" class="w-1/2 py-3.5 bg-white/5 text-xs font-bold text-gray-300 rounded-xl cursor-pointer">Previous</button>
+                        <button onclick="forceNextQuestion(${qObj.id})" class="w-1/2 py-3.5 bg-indigo-600/20 border border-indigo-500/20 text-xs font-bold text-indigo-300 rounded-xl cursor-pointer">Skip / Next</button>
                     </div>
                 </div>
             </div>
@@ -254,14 +246,12 @@ function updateWizardView() {
         return;
     }
 
-    // Step 12: Render Results Dashboard View Screen Panel
     if (assessmentData.currentStep === 12) {
-        progressContainer.classList.replace('flex', 'hidden');
+        if (progressContainer) progressContainer.style.display = 'none';
         renderOutputDashboard();
     }
 }
 
-// Controller parameter state mutations
 function advanceStep(modifier) {
     assessmentData.currentStep += modifier;
     updateWizardView();
@@ -270,25 +260,15 @@ function advanceStep(modifier) {
 function saveMetadataAndContinue() {
     const compInput = document.getElementById('companyNameInput');
     const roleInput = document.getElementById('internshipRoleInput');
-    
     if (compInput) assessmentData.companyName = compInput.value.trim();
     if (roleInput) assessmentData.internshipRole = roleInput.value.trim();
-    
     advanceStep(1);
 }
 
 function selectOption(qId, optIdx, score, flagText) {
-    assessmentData.answers[qId] = {
-        index: optIdx,
-        score: score,
-        flag: flagText || null
-    };
-
+    assessmentData.answers[qId] = { index: optIdx, score: score, flag: flagText || null };
     updateWizardView();
-
-    setTimeout(() => {
-        advanceStep(1);
-    }, 250);
+    setTimeout(() => { advanceStep(1); }, 200);
 }
 
 function forceNextQuestion(qId) {
@@ -299,6 +279,7 @@ function forceNextQuestion(qId) {
 }
 
 function renderOutputDashboard() {
+    const enginePortal = document.getElementById('wizard-render-engine');
     const displayName = assessmentData.companyName ? assessmentData.companyName : "Your Internship Offer";
     
     let scoreAccumulator = 0;
@@ -307,13 +288,10 @@ function renderOutputDashboard() {
     Object.keys(assessmentData.answers).forEach(key => {
         const record = assessmentData.answers[key];
         scoreAccumulator += record.score;
-        if (record.flag) {
-            criticalFlags.push(record.flag);
-        }
+        if (record.flag) criticalFlags.push(record.flag);
     });
 
     const standardScore = Math.min(scoreAccumulator, 100);
-
     let riskLevel = "LOW RISK";
     let badgeClass = "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
     
@@ -327,15 +305,10 @@ function renderOutputDashboard() {
 
     let flagsListHTML = "";
     if (criticalFlags.length === 0) {
-        flagsListHTML = `<li class="flex items-start space-x-2 text-gray-400"><span>•</span><span>No critical flags detected. Proceed with regular professional precautions.</span></li>`;
+        flagsListHTML = `<li class="text-gray-400">• No critical flags detected. Proceed with standard due diligence.</li>`;
     } else {
         criticalFlags.forEach(flag => {
-            flagsListHTML += `
-                <li class="flex items-start space-x-2.5 text-gray-300">
-                    <span class="text-rose-400 font-bold">•</span>
-                    <span>${flag}</span>
-                </li>
-            `;
+            flagsListHTML += `<li class="text-gray-300 flex items-start"><span class="text-rose-400 mr-2">•</span><span>${flag}</span></li>`;
         });
     }
 
@@ -345,29 +318,28 @@ function renderOutputDashboard() {
                 <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Verification Result</span>
                 <h2 class="text-xl font-extrabold mt-1 text-white tracking-tight">${displayName}</h2>
             </div>
-            
             <div class="flex flex-col items-center space-y-3 py-2">
                 <div class="text-5xl font-black text-white tracking-tight">${standardScore}<span class="text-sm font-medium text-gray-500">/100</span></div>
-                <div class="text-[11px] uppercase font-extrabold tracking-widest px-4 py-1.5 rounded-full ${badgeClass}">
-                    ${riskLevel}
-                </div>
+                <div class="text-[11px] uppercase font-extrabold tracking-widest px-4 py-1.5 rounded-full ${badgeClass}">${riskLevel}</div>
             </div>
-
             <div class="space-y-3 pt-2">
                 <h4 class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Identified Risk Patterns:</h4>
-                <ul class="text-xs space-y-2.5 leading-relaxed">
-                    ${flagsListHTML}
-                </ul>
+                <ul class="text-xs space-y-2.5 leading-relaxed">${flagsListHTML}</ul>
             </div>
-
             <div class="pt-4">
-                <button onclick="resetCalculatorFramework()" class="w-full py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-gray-300 rounded-xl transition-all cursor-pointer">
-                    Restart Assessment Engine
-                </button>
+                <button onclick="resetCalculatorFramework()" class="w-full py-3.5 bg-white/5 border border-white/10 text-xs font-bold text-gray-300 rounded-xl transition-all cursor-pointer">Restart Assessment Engine</button>
             </div>
         </div>
     `;
 }
 
-function resetCalculatorFr
- 
+function resetCalculatorFramework() {
+    assessmentData.companyName = "";
+    assessmentData.internshipRole = "";
+    assessmentData.currentStep = 0;
+    assessmentData.answers = {};
+    updateWizardView();
+}
+
+// Render instantly when script parses to bypass any DOMContentLoaded delays
+updateWizardView();
