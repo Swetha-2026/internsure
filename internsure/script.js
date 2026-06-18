@@ -1,218 +1,248 @@
-// Theme toggle
-const themeBtn = document.getElementById('themeBtn');
-const body = document.body;
+// Global App State Variables for Charts
+let gaugeChartInstance = null;
+let distributionChartInstance = null;
 
-themeBtn.addEventListener('click', () => {
-  if (body.classList.contains('dark-theme')) {
-    body.classList.remove('dark-theme');
-    body.classList.add('light-theme');
-    themeBtn.textContent = 'Dark Mode';
-  } else {
-    body.classList.remove('light-theme');
-    body.classList.add('dark-theme');
-    themeBtn.textContent = 'Light Mode';
-  }
+document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    initCounters();
+    initDistributionChart();
+    
+    // Handle form submit execution
+    document.getElementById('riskForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        runRiskAssessment();
+    });
 });
 
-// Initialize theme based on preference
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-  body.classList.add('dark-theme');
-  document.getElementById('themeBtn').textContent = 'Light Mode';
-} else {
-  body.classList.add('light-theme');
-  document.getElementById('themeBtn').textContent = 'Dark Mode';
+// 1. Dark/Light Mode Theme Toggle Logic
+function initTheme() {
+    const themeToggle = document.getElementById('themeToggle');
+    const htmlEl = document.documentElement;
+    
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = htmlEl.getAttribute('data-bs-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        htmlEl.setAttribute('data-bs-theme', newTheme);
+        
+        // Update icon representation
+        const icon = themeToggle.querySelector('i');
+        if (newTheme === 'dark') {
+            icon.className = 'fa-solid fa-sun fs-5';
+        } else {
+            icon.className = 'fa-solid fa-moon fs-5';
+        }
+    });
 }
 
-// Variables to store data
-let riskScore = 0;
-let riskLevel = 'Low';
-
-// Sample Data for Analytics
-const riskData = {
-  low: 50,
-  medium: 30,
-  high: 20
-};
-
-// Initialize Charts
-let riskMeterChart;
-let riskDistributionChart;
-
-window.onload = () => {
-  initCharts();
-  loadAnalytics();
-};
-
-// Function to initialize charts
-function initCharts() {
-  const ctxMeter = document.getElementById('riskMeterChart').getContext('2d');
-  riskMeterChart = new Chart(ctxMeter, {
-    type: 'doughnut',
-    data: {
-      labels: ['Risk Level'],
-      datasets: [{
-        data: [riskScore, 100 - riskScore],
-        backgroundColor: ['#28a745', '#dee2e6'],
-        hoverOffset: 4
-      }]
-    },
-    options: {
-      cutout: '70%',
-      plugins: {
-        legend: { display: false },
-        tooltip: { enabled: false }
-      }
-    }
-  });
-
-  const ctxDist = document.getElementById('riskDistributionChart').getContext('2d');
-  riskDistributionChart = new Chart(ctxDist, {
-    type: 'pie',
-    data: {
-      labels: ['Low', 'Medium', 'High'],
-      datasets: [{
-        data: [riskData.low, riskData.medium, riskData.high],
-        backgroundColor: ['#28a745', '#ffc107', '#dc3545']
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { position: 'bottom' }
-      }
-    }
-  });
+// 2. Animated Stats Counters
+function initCounters() {
+    const counters = document.querySelectorAll('.counter');
+    counters.forEach(counter => {
+        const target = +counter.getAttribute('data-target');
+        const increment = target / 50;
+        
+        const updateCount = () => {
+            const count = +counter.innerText;
+            if (count < target) {
+                counter.innerText = Math.ceil(count + increment);
+                setTimeout(updateCount, 20);
+            } else {
+                counter.innerText = target;
+            }
+        };
+        updateCount();
+    });
 }
 
-// Load analytics data into progress bars
-function loadAnalytics() {
-  document.getElementById('lowRiskProgress').style.width = riskData.low + '%';
-  document.getElementById('lowRiskProgress').setAttribute('aria-valuenow', riskData.low);
-  document.getElementById('mediumRiskProgress').style.width = riskData.medium + '%';
-  document.getElementById('mediumRiskProgress').setAttribute('aria-valuenow', riskData.medium);
-  document.getElementById('highRiskProgress').style.width = riskData.high + '%';
-  document.getElementById('highRiskProgress').setAttribute('aria-valuenow', riskData.high);
+// 3. Risk Engine Heuristics Core
+function runRiskAssessment() {
+    const companyName = document.getElementById('companyName').value;
+    const role = document.getElementById('internRole').value;
+    const url = document.getElementById('companyUrl').value.trim();
+    const email = document.getElementById('companyEmail').value.trim();
+    const stipend = parseFloat(document.getElementById('stipend').value) || 0;
+    const appFee = document.getElementById('appFee').value;
+    const desc = document.getElementById('jobDesc').value.toLowerCase();
+
+    let score = 0;
+    let flags = [];
+
+    // Factor Assessment Checks
+    let domainWeight = 100;
+    let feeWeight = 100;
+    let stipendWeight = 100;
+
+    // Check 1: Missing URL Domain
+    if (!url) {
+        score += 25;
+        domainWeight -= 50;
+        flags.push({ text: "Missing official company website link.", critical: false });
+    }
+
+    // Check 2: Free Mail Handlers Domain Check
+    const freeDomains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'];
+    const emailDomain = email.split('@')[1] ? email.split('@')[1].toLowerCase() : '';
+    if (freeDomains.includes(emailDomain)) {
+        score += 35;
+        domainWeight -= 50;
+        flags.push({ text: `Recruiter uses a public email domain (${emailDomain}).`, critical: true });
+    }
+
+    // Check 3: Fee requirements vulnerabilities
+    if (appFee === 'yes') {
+        score += 40;
+        feeWeight = 0;
+        flags.push({ text: "Demands upfront monetary processing or kit/training fees.", critical: true });
+    }
+
+    // Check 4: Abstract extreme high payment profiles
+    if (stipend > 15000) { 
+        score += 15;
+        stipendWeight = 30;
+        flags.push({ text: "Unrealistically high stipend package scale listed.", critical: false });
+    }
+
+    // Check 5: Word pattern matches
+    if (desc.includes('deposit') || desc.includes('crypto') || desc.includes('telegram')) {
+        score += 15;
+        flags.push({ text: "Description mentions suspicious terms (Telegram, Crypto, Deposit).", critical: false });
+    }
+
+    // Cap score at 100
+    score = Math.min(score, 100);
+
+    // Update UI Checklist bars
+    updateFactorBars(domainWeight, feeWeight, stipendWeight);
+
+    // Transition elements display
+    document.getElementById('resultPlaceholder').classList.add('d-none');
+    const realDash = document.getElementById('realDashboard');
+    realDash.classList.remove('d-none');
+
+    // Render texts parameters
+    document.getElementById('dashScore').innerText = score;
+    document.getElementById('dashCompany').innerText = companyName;
+    document.getElementById('dashRole').innerText = role;
+
+    // Badge styling logic definitions
+    const badge = document.getElementById('riskBadge');
+    const recContainer = document.getElementById('dashRec');
+    let summaryText = "";
+    
+    if (score <= 30) {
+        badge.className = "badge mb-2 py-2 px-3 fs-6 w-100 bg-success";
+        badge.innerText = "LOW THREAT RISK";
+        summaryText = "The opportunity structures seem structurally clean. Normal validation rules applies.";
+        recContainer.className = "alert alert-success py-2 px-3 small mb-0";
+        recContainer.innerHTML = "Proceed with application. Confirm structural expectations during standard discussions.";
+    } else if (score <= 65) {
+        badge.className = "badge mb-2 py-2 px-3 fs-6 w-100 bg-warning text-dark";
+        badge.innerText = "MEDIUM RISK WARNING";
+        summaryText = "Minor irregular flags caught. The hiring pipeline structure profiles elements needing review.";
+        recContainer.className = "alert alert-warning py-2 px-3 small text-dark mb-0";
+        recContainer.innerHTML = "Do not pay any money. Ask the representative to clarify identity parameters via verified channels.";
+    } else {
+        badge.className = "badge mb-2 py-2 px-3 fs-6 w-100 bg-danger";
+        badge.innerText = "HIGH SCAM RISK";
+        summaryText = "Critical security issues identified. High probability of fraudulent engagement behavior patterns.";
+        recContainer.className = "alert alert-danger py-2 px-3 small mb-0";
+        recContainer.innerHTML = "<strong>Recommendation:</strong> Avoid sharing sensitive identifiers. Do not transfer any currency amounts.";
+    }
+    document.getElementById('dashSummary').innerText = summaryText;
+
+    // Output flags array components items
+    const listUl = document.getElementById('flagsList');
+    listUl.innerHTML = "";
+    if(flags.length === 0) {
+        listUl.innerHTML = `<li class="list-group-item small text-muted"><i class="fa-solid fa-circle-check text-success me-2"></i>No warning anomalies detected.</li>`;
+    } else {
+        flags.forEach(f => {
+            listUl.innerHTML += `
+                <li class="list-group-item small d-flex align-items-center">
+                    <i class="fa-solid ${f.critical ? 'fa-circle-xmark text-danger' : 'fa-triangle-exclamation text-warning'} me-2"></i>
+                    ${f.text}
+                </li>`;
+        });
+    }
+
+    // Refresh graphical dashboard assets instances
+    updateGaugeChart(score);
 }
 
-// Form Submission & Risk Assessment Logic
-document.getElementById('verificationForm').addEventListener('submit', function(e) {
-  e.preventDefault();
+// 4. Update Horizontal Checklist Factor Bars
+function updateFactorBars(domain, fee, stipend) {
+    document.getElementById('factorDomain').style.width = `${domain}%`;
+    document.getElementById('factorDomainVal').innerText = `${domain}%`;
+    document.getElementById('factorDomain').className = `progress-bar ${domain < 50 ? 'bg-danger' : domain < 100 ? 'bg-warning' : 'bg-success'}`;
 
-  // Get form values
-  const companyName = document.getElementById('companyName').value.trim();
-  const role = document.getElementById('role').value.trim();
-  const website = document.getElementById('companyWebsite').value.trim();
-  const email = document.getElementById('contactEmail').value.trim();
-  const stipend = parseFloat(document.getElementById('stipend').value.trim()) || 0;
-  const duration = parseInt(document.getElementById('duration').value.trim()) || 0;
-  const applicationFee = document.querySelector('input[name="applicationFee"]:checked').value;
-  const description = document.getElementById('description').value.trim();
+    document.getElementById('factorFee').style.width = `${fee}%`;
+    document.getElementById('factorFeeVal').innerText = `${fee}%`;
+    document.getElementById('factorFee').className = `progress-bar ${fee === 0 ? 'bg-danger' : 'bg-success'}`;
 
-  // Reset previous results
-  document.getElementById('results').classList.add('d-none');
+    document.getElementById('factorStipend').style.width = `${stipend}%`;
+    document.getElementById('factorStipendVal').innerText = `${stipend}%`;
+    document.getElementById('factorStipend').className = `progress-bar ${stipend < 50 ? 'bg-warning' : 'bg-success'}`;
+}
 
-  let flags = [];
-  let score = 0;
-
-  // Check for missing company website
-  if (!website) {
-    flags.push('Missing company website');
-    score += 20;
-  } else {
-    // Validate URL format (basic)
-    try {
-      new URL(website);
-    } catch {
-      flags.push('Invalid company website URL');
-      score += 15;
+// 5. Chart.js Implementations (Gauge and Base Distribution Analysis)
+function updateGaugeChart(score) {
+    const ctx = document.getElementById('gaugeChart').getContext('2d');
+    
+    if (gaugeChartInstance) {
+        gaugeChartInstance.destroy();
     }
-  }
 
-  // Check contact email
-  const emailDomain = email.split('@')[1].toLowerCase();
-  if (['gmail.com', 'yahoo.com', 'outlook.com'].includes(emailDomain)) {
-    flags.push('Free email domain');
-    score += 15;
-  }
+    gaugeChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [score, 100 - score],
+                backgroundColor: [score > 65 ? '#dc3545' : score > 30 ? '#ffc107' : '#198754', '#e9ecef'],
+                borderWidth: 0,
+                radius: '90%',
+                cutout: '80%',
+                rotation: -90,
+                circumference: 180
+            }]
+        },
+        options: {
+            plugins: { tooltip: { enabled: false } },
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+}
 
-  // Check application fee
-  if (applicationFee === 'Yes') {
-    flags.push('Application fee charged');
-    score += 20;
-  }
+function initDistributionChart() {
+    const ctx = document.getElementById('distributionChart').getContext('2d');
+    distributionChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Domain Validation', 'Financial Assets Security', 'System Threat Metric Profile'],
+            datasets: [{
+                label: 'General Risk Component Weight',
+                data: [40, 20, 30],
+                backgroundColor: ['#0d6efd', '#6f42c1', '#0dcaf0'],
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, max: 100 } }
+        }
+    });
+}
 
-  // Check stipend
-  if (stipend > 1000) {
-    flags.push('Unrealistic stipend');
-    score += 15;
-  }
-
-  // Check duration
-  if (duration > 12) {
-    flags.push('Unusually long duration');
-    score += 10;
-  }
-
-  // Check description length
-  if (description.length < 20) {
-    flags.push('Missing internship details');
-    score += 10;
-  }
-
-  // Determine risk level
-  if (score <= 30) {
-    riskLevel = 'Low';
-  } else if (score <= 60) {
-    riskLevel = 'Medium';
-  } else {
-    riskLevel = 'High';
-  }
-
-  // Update risk score
-  riskScore = score;
-
-  // Update risk meter
-  riskMeterChart.data.datasets[0].data = [riskScore, 100 - riskScore];
-  riskMeterChart.data.datasets[0].backgroundColor = riskLevel === 'Low' ? ['#28a745', '#dee2e6']
-    : riskLevel === 'Medium' ? ['#ffc107', '#dee2e6']
-    : ['#dc3545', '#dee2e6'];
-  riskMeterChart.update();
-
-  // Update badge
-  const badge = document.getElementById('riskLevelBadge');
-  badge.textContent = riskLevel;
-  badge.className = 'badge ' + (riskLevel === 'Low' ? 'bg-success' : riskLevel === 'Medium' ? 'bg-warning' : 'bg-danger');
-
-  // Update risk score
-  document.getElementById('riskScore').textContent = riskScore;
-
-  // Update summary
-  document.getElementById('verificationSummary').textContent = `
-    Company: ${companyName}, Role: ${role}, Duration: ${duration} months, Stipend: $${stipend}, Fee: ${applicationFee}
-  `;
-
-  // Update flags
-  const flagsList = document.getElementById('warningFlags');
-  flagsList.innerHTML = '';
-  flags.forEach(flag => {
-    const li = document.createElement('li');
-    li.textContent = flag;
-    flagsList.appendChild(li);
-  });
-
-  // Update recommendations
-  const recList = document.getElementById('recommendations');
-  recList.innerHTML = '';
-  if (riskLevel === 'Low') {
-    recList.innerHTML = '<li>Internship appears legitimate. Proceed with confidence.</li>';
-  } else if (riskLevel === 'Medium') {
-    recList.innerHTML = '<li>Verify company details before proceeding.</li>';
-  } else {
-    recList.innerHTML = '<li>High risk detected. Be cautious and verify thoroughly.</li>';
-  }
-
-  // Show results
-  document.getElementById('results').classList.remove('d-none');
-  // Scroll to results
-  document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+// Mock Scam Data Loader Function
+function loadDemoData() {
+    document.getElementById('companyName').value = "Global Data Entry Hub Ltd";
+    document.getElementById('internRole').value = "Virtual Assistant Intern";
+    document.getElementById('companyUrl').value = ""; // blank intentionally
+    document.getElementById('companyEmail').value = "hr.globaldatahub@gmail.com";
+    document.getElementById('stipend').value = "22000"; // Too high for unstructured data entry
+    document.getElementById('appFee').value = "yes";
+    document.getElementById('jobDesc').value = "Must pay security collateral configuration charge for laptop allocation system via safe deposit.";
+    
+    runRiskAssessment();
 }
