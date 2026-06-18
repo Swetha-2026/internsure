@@ -1,15 +1,17 @@
-/* CSS Stylesheet for InternSure */
-
+/* Core Structural and Double Shaded Luxury UI Variables */
 :root {
-    --primary: #3b82f6; /* Bright Electric Blue */
-    --primary-hover: #1d4ed8;
-    --text-main: #f3f4f6; /* Bright light text for dark background */
+    --primary: #3b82f6; /* Electric Cyber Blue */
+    --primary-neon: #60a5fa;
+    --text-main: #f3f4f6;
     --text-muted: #9ca3af;
-    --bg-card: rgba(21, 27, 43, 0.7); /* Translucent dark blue-black surfaces */
-    --low-risk: #10b981;
-    --med-risk: #f59e0b;
-    --high-risk: #ef4444;
-    --border: rgba(255, 255, 255, 0.1);
+    --bg-card: rgba(10, 15, 30, 0.7); /* Deep Glassmorphic Panel Base */
+    --border: rgba(59, 130, 246, 0.15);
+    
+    /* 4-Tier Granular Threat Spectrum Palette */
+    --color-low: #10b981;
+    --color-avg: #6366f1;
+    --color-high: #f59e0b;
+    --color-crit: #ef4444;
 }
 
 * {
@@ -18,12 +20,17 @@
     padding: 0;
 }
 
-body {
+/* Immersive Blue and Black Mixed Double Shaded Background */
+html, body {
+    width: 100%;
+    min-height: 100vh;
     font-family: 'Plus Jakarta Sans', sans-serif;
     color: var(--text-main);
-    /* Double shaded Blue and Black mixed gradient background */
-    background: linear-gradient(135deg, #05070c 0%, #0a1122 40%, #112244 100%);
-    background-attachment: fixed;
+    background: #030508 !important;
+    /* Deep Black to Electric Navy/Midnight Blue Complex Radial Overlay */
+    background: radial-gradient(circle at 10% 20%, #030611 0%, #050914 45%, #0d1b3a 100%) !important;
+    background-attachment: fixed !important;
+    background-size: cover !important;
     line-height: 1.6;
     scroll-behavior: smooth;
 }
@@ -34,10 +41,9 @@ body {
     padding: 0 20px;
 }
 
-/* Header & Navigation */
 header {
-    background: rgba(5, 7, 12, 0.85);
-    backdrop-filter: blur(12px);
+    background: rgba(3, 5, 8, 0.75) !important;
+    backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
@@ -48,220 +54,246 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 70px;
+    height: 75px;
 }
 
 .logo {
-    font-size: 24px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
     font-weight: 700;
-    color: var(--primary);
+    color: #ffffff;
     text-decoration: none;
+    letter-spacing: -0.5px;
+}
+
+.neon-text {
+    color: var(--primary);
+    text-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
 }
 
 nav a {
     text-decoration: none;
     color: var(--text-muted);
-    margin-left: 24px;
-    font-weight: 500;
-    transition: color 0.2s;
+    margin-left: 28px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: color 0.25s;
 }
 
 nav a:hover {
-    color: var(--primary);
+    color: var(--primary-neon);
 }
 
-/* Hero Section */
-.hero {
+section {
     padding: 100px 0;
+    background: transparent !important;
 }
 
+/* Landing Page Hero Grid Layout styling */
 .hero-grid {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 50px;
     flex-wrap: wrap;
 }
 
 .hero-text {
-    flex: 1;
-    min-width: 300px;
+    flex: 1.2;
+    min-width: 320px;
 }
 
 .badge {
-    background-color: rgba(59, 130, 246, 0.15);
-    color: var(--primary);
+    background-color: rgba(59, 130, 246, 0.1);
+    color: var(--primary-neon);
     border: 1px solid rgba(59, 130, 246, 0.3);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
     display: inline-block;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
 }
 
 .hero-text h1 {
-    font-size: 48px;
-    line-height: 1.2;
-    margin-bottom: 20px;
-    font-weight: 800;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 54px;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    font-weight: 700;
     color: #ffffff;
 }
 
 .accent {
-    color: var(--primary);
-    text-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+    color: var(--primary-neon);
+    text-shadow: 0 0 35px rgba(59, 130, 246, 0.4);
 }
 
 .hero-text p {
     font-size: 18px;
     color: var(--text-muted);
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 }
 
 .cta-buttons {
     display: flex;
     gap: 15px;
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 }
 
 .btn {
-    padding: 12px 24px;
+    padding: 14px 28px;
     border-radius: 8px;
     text-decoration: none;
-    font-weight: 600;
-    transition: all 0.2s;
+    font-weight: 700;
+    font-size: 15px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     border: none;
-    font-size: 16px;
 }
 
 .btn-primary {
     background-color: var(--primary);
-    color: white;
-    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+    color: #ffffff;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
 }
 
 .btn-primary:hover {
     background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(59, 130, 246, 0.5);
 }
 
 .btn-secondary {
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.05);
     color: #ffffff;
     border: 1px solid var(--border);
 }
 
 .btn-secondary:hover {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: var(--primary-neon);
 }
 
 .hero-bullets {
     display: flex;
-    gap: 20px;
+    gap: 24px;
     font-size: 14px;
     color: var(--text-muted);
-    flex-wrap: wrap;
+    font-weight: 500;
 }
 
+/* Immersive UX Visual Ornamentation Card Stack Layout */
 .hero-visual {
-    flex: 1;
+    flex: 0.8;
     min-width: 300px;
     display: flex;
     justify-content: center;
+    position: relative;
+}
+
+.glow-orb {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(59,130,246,0.3) 0%, rgba(0,0,0,0) 70%);
+    top: -20px;
+    filter: blur(15px);
+    z-index: 0;
 }
 
 .card-stack {
     position: relative;
-    width: 300px;
-    height: 200px;
+    width: 280px;
+    height: 220px;
+    z-index: 1;
 }
 
 .visual-card {
     position: absolute;
     width: 100%;
-    padding: 20px;
+    padding: 18px 22px;
     border-radius: 12px;
     color: white;
-    font-weight: 600;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
-.high-risk { background-color: var(--high-risk); top: 0; left: 0; z-index: 3; }
-.med-risk { background-color: var(--med-risk); top: 30px; left: 20px; z-index: 2; opacity: 0.8; }
-.low-risk { background-color: var(--low-risk); top: 60px; left: 40px; z-index: 1; opacity: 0.6; }
+.critical-risk { background: linear-gradient(135deg, #ef4444, #7f1d1d); top: 0; left: 0; z-index: 4; }
+.high-risk { background: linear-gradient(135deg, #f59e0b, #78350f); top: 35px; left: 20px; z-index: 3; opacity: 0.85; }
+.avg-risk { background: linear-gradient(135deg, #6366f1, #312e81); top: 70px; left: 40px; z-index: 2; opacity: 0.7; }
+.low-risk { background: linear-gradient(135deg, #10b981, #064e3b); top: 105px; left: 60px; z-index: 1; opacity: 0.55; }
 
-/* Section Configurations */
+/* Dynamic Content Section Architecture Elements */
 .section-title {
     text-align: center;
-    max-width: 600px;
-    margin: 0 auto 50px auto;
+    max-width: 700px;
+    margin: 0 auto 60px auto;
 }
 
 .sub-title {
-    color: var(--primary);
-    font-weight: 700;
+    color: var(--primary-neon);
+    font-weight: 800;
     text-transform: uppercase;
-    font-size: 14px;
-    letter-spacing: 1px;
+    font-size: 13px;
+    letter-spacing: 2px;
 }
 
 .section-title h2 {
-    font-size: 32px;
-    margin: 10px 0;
-    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 36px;
+    margin: 12px 0;
     color: #ffffff;
 }
 
-/* Structural Components styling */
-.how-it-works, .assessment, .about, .result-section {
-    padding: 90px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.steps-grid, .about-grid {
+.about-grid {
     display: flex;
     gap: 30px;
     flex-wrap: wrap;
 }
 
-.step-card, .about-card {
+.about-card {
     flex: 1;
-    min-width: 250px;
-    padding: 30px;
+    min-width: 300px;
+    padding: 40px;
     background: var(--bg-card);
-    border-radius: 12px;
+    border-radius: 16px;
     border: 1px solid var(--border);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-.step-num {
-    width: 40px;
-    height: 40px;
-    background-color: var(--primary);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
+.card-icon {
+    font-size: 32px;
     margin-bottom: 20px;
 }
 
-/* Assessment Dynamic Questionnaire */
+.about-card h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    color: #ffffff;
+    margin-bottom: 15px;
+}
+
+/* User Form Element UX Design */
 .quiz-form {
     background-color: var(--bg-card);
-    padding: 40px;
-    border-radius: 16px;
+    padding: 45px;
+    border-radius: 20px;
     border: 1px solid var(--border);
-    max-width: 800px;
+    max-width: 850px;
     margin: 0 auto;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
 }
 
 .form-group {
-    margin-bottom: 30px;
+    margin-bottom: 35px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding-bottom: 25px;
+    padding-bottom: 30px;
 }
 
 .form-group:last-of-type {
@@ -270,176 +302,183 @@ nav a:hover {
 
 .form-group label {
     display: block;
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 15px;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 18px;
     color: #ffffff;
 }
 
 .radio-options {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
 }
 
+/* Micro interaction styling for selection validation loops */
 .radio-label {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-    padding: 14px 18px;
+    gap: 14px;
+    padding: 16px 20px;
     border: 1px solid var(--border);
     background: rgba(255, 255, 255, 0.02);
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.25s ease;
 }
 
 .radio-label:hover {
-    background-color: rgba(255, 255, 255, 0.07);
-    border-color: var(--primary);
+    background-color: rgba(59, 130, 246, 0.06);
+    border-color: var(--primary-neon);
+    transform: translateX(4px);
 }
 
 .radio-label input {
-    margin-top: 5px;
-    accent-color: var(--primary);
+    margin-top: 6px;
+    accent-color: var(--primary-neon);
+    width: 18px;
+    height: 18px;
 }
 
-.submit-btn {
-    width: 100%;
-    padding: 16px;
-}
-
-/* Result Architecture UI elements */
-.hidden {
-    display: none !important;
+/* Advanced Interactive Processing Output Interface Elements */
+.result-section {
+    border-top: 1px solid var(--border);
 }
 
 .result-card {
-    background: var(--bg-card);
-    border-radius: 16px;
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    padding: 40px;
-    max-width: 800px;
+    background: rgba(8, 12, 24, 0.85);
+    border-radius: 20px;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    padding: 45px;
+    max-width: 850px;
     margin: 0 auto;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 25px 60px rgba(59, 130, 246, 0.1);
 }
 
 .score-display {
     display: flex;
     align-items: center;
-    gap: 40px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 30px;
-    margin-bottom: 30px;
+    gap: 45px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 35px;
+    margin-bottom: 35px;
     flex-wrap: wrap;
 }
 
 .score-circle {
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
     border: 6px solid var(--primary);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.2);
+    transition: all 0.5s ease;
 }
 
 #score-num {
-    font-size: 34px;
-    font-weight: 800;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 40px;
+    font-weight: 700;
     color: #ffffff;
 }
 
 .score-sub {
     font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     color: var(--text-muted);
 }
 
 .score-info h3 {
-    font-size: 28px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 32px;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
-.report-details {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
-.flags-box, .checklist-box {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 24px;
+.flags-box {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 26px;
     border-radius: 12px;
     border: 1px solid var(--border);
 }
 
-.flags-box h3, .checklist-box h3 {
-    margin-bottom: 15px;
+.flags-box h3 {
+    font-family: 'Space Grotesk', sans-serif;
     font-size: 18px;
-    color: #ffffff;
+    margin-bottom: 18px;
 }
 
 .flag-alert {
-    background-color: rgba(239, 68, 68, 0.1);
-    border-left: 4px solid var(--high-risk);
-    padding: 12px 16px;
+    background-color: rgba(239, 68, 68, 0.06);
+    border-left: 4px solid var(--color-crit);
+    padding: 14px 18px;
     border-radius: 4px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     font-size: 14px;
     color: #fca5a5;
 }
 
-.check-item {
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    font-size: 14px;
-}
-
-.check-item:last-child {
-    border-bottom: none;
-}
-
-.verification-list {
-    padding-left: 20px;
-}
-
-.verification-list li {
-    margin-bottom: 10px;
-    color: var(--text-muted);
-}
-
-/* Footer Section Styling */
-footer {
-    background-color: #030508;
-    color: #6b7280;
-    padding: 60px 0;
-    font-size: 14px;
+/* Institutional Level System Disclaimer Box Elements */
+.disclaimer-section {
     border-top: 1px solid var(--border);
+    padding: 80px 0;
 }
 
-.footer-logo {
-    color: white;
-    font-size: 24px;
+.disclaimer-box {
+    background: rgba(15, 10, 10, 0.5);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    padding: 35px;
+    border-radius: 14px;
+}
+
+.warning-tag {
+    display: inline-block;
+    color: #ef4444;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 1.5px;
     margin-bottom: 15px;
 }
 
-.footer-text {
-    margin-bottom: 20px;
-    color: var(--text-muted);
+.disclaimer-box p {
+    font-size: 13px;
+    color: #d1d5db;
+    line-height: 1.7;
+    text-align: justify;
 }
 
-.disclaimer {
-    font-size: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    padding-top: 20px;
-    margin-top: 20px;
+/* System Footer Base Layout */
+footer {
+    background-color: #020306;
+    color: #4b5563;
+    padding: 50px 0;
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+}
+
+.footer-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    color: white;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.hidden {
+    display: none !important;
 }
 
 @media(max-width: 768px) {
-    .hero-text h1 { font-size: 36px; }
+    .hero-text h1 { font-size: 38px; }
     .score-display { flex-direction: column; text-align: center; }
 }
+   
