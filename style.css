@@ -1,96 +1,118 @@
 body {
+    margin: 0;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    background-color: #03020a;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    background: #05060a;
+    color: white;
+    overflow-x: hidden;
 }
 
-/* Glassmorphic Panel Cards */
-.glass-card {
-    background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.04) 0%,
-        rgba(255, 255, 255, 0.01) 100%
-    );
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
-    border-radius: 16px;
+/* Glow Background */
+.bg-glow {
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(0, 200, 255, 0.15), transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(120, 0, 255, 0.12), transparent 40%);
+    z-index: -1;
 }
 
-/* Option Pills */
-.pill-option {
-    transition: all 0.2s ease;
-    border-radius: 12px;
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    backdrop-filter: blur(20px);
+    background: rgba(0,0,0,0.4);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-.pill-option:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.18);
-    transform: translateY(-2px);
+.logo {
+    font-weight: 800;
+    letter-spacing: 1px;
 }
 
-/* Active selection glow effect */
-.pill-option:active {
-    transform: scale(0.98);
+/* Progress */
+.progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* Glow Button */
-.glow-btn {
-    transition: all 0.3s ease;
-    box-shadow: 0 0 0 rgba(6, 182, 212, 0);
+.bar {
+    width: 120px;
+    height: 5px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
 }
 
-.glow-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(6, 182, 212, 0.35);
-}
-
-.glow-btn:active {
-    transform: scale(0.98);
-}
-
-/* Screen animation */
-.screen-fade-in {
-    animation: screenReveal 0.35s ease-out forwards;
-}
-
-@keyframes screenReveal {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-        filter: blur(6px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-        filter: blur(0);
-    }
-}
-
-/* Smooth scroll behavior */
-html {
-    scroll-behavior: smooth;
-}
-
-/* Progress bar smooth transition fix */
 #progress-bar {
-    transition: width 0.4s ease-in-out;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00d4ff, #7c3aed);
+    transition: width 0.4s ease;
 }
 
-/* Better button feel globally */
+/* Layout */
+main {
+    padding-top: 90px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* Card */
+.card {
+    width: 92%;
+    max-width: 520px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 20px;
+    backdrop-filter: blur(20px);
+    animation: fade 0.4s ease;
+}
+
+@keyframes fade {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+/* Buttons */
 button {
-    -webkit-tap-highlight-color: transparent;
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
 }
 
-/* Mobile optimization */
-@media (max-width: 480px) {
-    .glass-card {
-        padding: 14px;
-    }
+.primary {
+    background: linear-gradient(90deg,#00d4ff,#7c3aed);
+    color: black;
+}
 
-    .pill-option {
-        font-size: 12px;
-    }
+.option {
+    background: rgba(255,255,255,0.05);
+    color: white;
+    margin: 8px 0;
+    text-align: left;
+}
+
+.option:hover {
+    transform: scale(1.02);
+    background: rgba(255,255,255,0.08);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    font-size: 11px;
+    padding: 20px;
+    opacity: 0.5;
 }
