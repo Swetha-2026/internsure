@@ -1,202 +1,218 @@
-// InternShield AI - Risk Assessment Engine
+// Theme toggle
+const themeBtn = document.getElementById('themeBtn');
+const body = document.body;
 
-document.addEventListener("DOMContentLoaded", () => {
-
-    const form = document.getElementById("riskForm");
-
-    if (!form) return;
-
-    form.addEventListener("submit", function (e) {
-
-        e.preventDefault();
-
-        let riskScore = 0;
-        let warnings = [];
-
-        const company =
-            document.getElementById("company").value.trim();
-
-        const email =
-            document.getElementById("email").value.trim().toLowerCase();
-
-        const website =
-            document.getElementById("website").value.trim();
-
-        const stipend =
-            Number(document.getElementById("stipend").value) || 0;
-
-        const fee =
-            Number(document.getElementById("fee").value) || 0;
-
-        const description =
-            document.getElementById("description").value.toLowerCase();
-
-        // --------------------
-        // COMPANY NAME CHECK
-        // --------------------
-        if (company.length < 3) {
-            riskScore += 15;
-            warnings.push("Company name looks incomplete.");
-        }
-
-        // --------------------
-        // WEBSITE CHECK
-        // --------------------
-        if (website === "") {
-            riskScore += 20;
-            warnings.push("No company website provided.");
-        }
-
-        // --------------------
-        // EMAIL CHECK
-        // --------------------
-        const freeDomains = [
-            "gmail.com",
-            "yahoo.com",
-            "outlook.com",
-            "hotmail.com"
-        ];
-
-        const emailDomain = email.split("@")[1];
-
-        if (freeDomains.includes(emailDomain)) {
-            riskScore += 15;
-            warnings.push(
-                "Recruiter is using a free email service."
-            );
-        }
-
-        // --------------------
-        // STIPEND CHECK
-        // --------------------
-        if (stipend > 100000) {
-            riskScore += 25;
-            warnings.push(
-                "Very high stipend for an internship."
-            );
-        }
-
-        // --------------------
-        // APPLICATION FEE CHECK
-        // --------------------
-        if (fee > 0) {
-            riskScore += 30;
-            warnings.push(
-                "Internship requires an application fee."
-            );
-        }
-
-        if (fee > 5000) {
-            riskScore += 10;
-            warnings.push(
-                "Application fee amount is unusually high."
-            );
-        }
-
-        // --------------------
-        // DESCRIPTION CHECK
-        // --------------------
-        const suspiciousWords = [
-            "guaranteed",
-            "easy money",
-            "earn instantly",
-            "registration fee",
-            "limited seats",
-            "pay first",
-            "quick income",
-            "urgent hiring",
-            "100% placement"
-        ];
-
-        suspiciousWords.forEach(word => {
-            if (description.includes(word)) {
-                riskScore += 8;
-                warnings.push(
-                    `Suspicious keyword detected: "${word}"`
-                );
-            }
-        });
-
-        // Limit Score
-        if (riskScore > 100) {
-            riskScore = 100;
-        }
-
-        // --------------------
-        // DETERMINE RISK LEVEL
-        // --------------------
-        let level = "";
-        let trust = 0;
-
-        if (riskScore <= 30) {
-            level = "LOW RISK";
-            trust = 100 - riskScore;
-        }
-        else if (riskScore <= 60) {
-            level = "MEDIUM RISK";
-            trust = 100 - riskScore;
-        }
-        else {
-            level = "HIGH RISK";
-            trust = 100 - riskScore;
-        }
-
-        // --------------------
-        // UPDATE DASHBOARD
-        // --------------------
-        document.getElementById("riskScore").innerText =
-            riskScore;
-
-        document.getElementById("trustScore").innerText =
-            trust + "%";
-
-        const riskLevel =
-            document.getElementById("riskLevel");
-
-        riskLevel.innerText = level;
-
-        if (level === "LOW RISK") {
-            riskLevel.style.color = "#00ff88";
-        }
-        else if (level === "MEDIUM RISK") {
-            riskLevel.style.color = "#ffd43b";
-        }
-        else {
-            riskLevel.style.color = "#ff4d6d";
-        }
-
-        // --------------------
-        // WARNINGS
-        // --------------------
-        const warningList =
-            document.getElementById("warningList");
-
-        warningList.innerHTML = "";
-
-        if (warnings.length === 0) {
-            warningList.innerHTML =
-                "<li>No major warning signs detected.</li>";
-        }
-        else {
-            warnings.forEach(item => {
-
-                const li =
-                    document.createElement("li");
-
-                li.textContent = item;
-
-                warningList.appendChild(li);
-
-            });
-        }
-
-        // Smooth Scroll
-        document
-            .getElementById("dashboard")
-            .scrollIntoView({
-                behavior: "smooth"
-            });
-
-    });
-
+themeBtn.addEventListener('click', () => {
+  if (body.classList.contains('dark-theme')) {
+    body.classList.remove('dark-theme');
+    body.classList.add('light-theme');
+    themeBtn.textContent = 'Dark Mode';
+  } else {
+    body.classList.remove('light-theme');
+    body.classList.add('dark-theme');
+    themeBtn.textContent = 'Light Mode';
+  }
 });
+
+// Initialize theme based on preference
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  body.classList.add('dark-theme');
+  document.getElementById('themeBtn').textContent = 'Light Mode';
+} else {
+  body.classList.add('light-theme');
+  document.getElementById('themeBtn').textContent = 'Dark Mode';
+}
+
+// Variables to store data
+let riskScore = 0;
+let riskLevel = 'Low';
+
+// Sample Data for Analytics
+const riskData = {
+  low: 50,
+  medium: 30,
+  high: 20
+};
+
+// Initialize Charts
+let riskMeterChart;
+let riskDistributionChart;
+
+window.onload = () => {
+  initCharts();
+  loadAnalytics();
+};
+
+// Function to initialize charts
+function initCharts() {
+  const ctxMeter = document.getElementById('riskMeterChart').getContext('2d');
+  riskMeterChart = new Chart(ctxMeter, {
+    type: 'doughnut',
+    data: {
+      labels: ['Risk Level'],
+      datasets: [{
+        data: [riskScore, 100 - riskScore],
+        backgroundColor: ['#28a745', '#dee2e6'],
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      cutout: '70%',
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false }
+      }
+    }
+  });
+
+  const ctxDist = document.getElementById('riskDistributionChart').getContext('2d');
+  riskDistributionChart = new Chart(ctxDist, {
+    type: 'pie',
+    data: {
+      labels: ['Low', 'Medium', 'High'],
+      datasets: [{
+        data: [riskData.low, riskData.medium, riskData.high],
+        backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom' }
+      }
+    }
+  });
+}
+
+// Load analytics data into progress bars
+function loadAnalytics() {
+  document.getElementById('lowRiskProgress').style.width = riskData.low + '%';
+  document.getElementById('lowRiskProgress').setAttribute('aria-valuenow', riskData.low);
+  document.getElementById('mediumRiskProgress').style.width = riskData.medium + '%';
+  document.getElementById('mediumRiskProgress').setAttribute('aria-valuenow', riskData.medium);
+  document.getElementById('highRiskProgress').style.width = riskData.high + '%';
+  document.getElementById('highRiskProgress').setAttribute('aria-valuenow', riskData.high);
+}
+
+// Form Submission & Risk Assessment Logic
+document.getElementById('verificationForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  // Get form values
+  const companyName = document.getElementById('companyName').value.trim();
+  const role = document.getElementById('role').value.trim();
+  const website = document.getElementById('companyWebsite').value.trim();
+  const email = document.getElementById('contactEmail').value.trim();
+  const stipend = parseFloat(document.getElementById('stipend').value.trim()) || 0;
+  const duration = parseInt(document.getElementById('duration').value.trim()) || 0;
+  const applicationFee = document.querySelector('input[name="applicationFee"]:checked').value;
+  const description = document.getElementById('description').value.trim();
+
+  // Reset previous results
+  document.getElementById('results').classList.add('d-none');
+
+  let flags = [];
+  let score = 0;
+
+  // Check for missing company website
+  if (!website) {
+    flags.push('Missing company website');
+    score += 20;
+  } else {
+    // Validate URL format (basic)
+    try {
+      new URL(website);
+    } catch {
+      flags.push('Invalid company website URL');
+      score += 15;
+    }
+  }
+
+  // Check contact email
+  const emailDomain = email.split('@')[1].toLowerCase();
+  if (['gmail.com', 'yahoo.com', 'outlook.com'].includes(emailDomain)) {
+    flags.push('Free email domain');
+    score += 15;
+  }
+
+  // Check application fee
+  if (applicationFee === 'Yes') {
+    flags.push('Application fee charged');
+    score += 20;
+  }
+
+  // Check stipend
+  if (stipend > 1000) {
+    flags.push('Unrealistic stipend');
+    score += 15;
+  }
+
+  // Check duration
+  if (duration > 12) {
+    flags.push('Unusually long duration');
+    score += 10;
+  }
+
+  // Check description length
+  if (description.length < 20) {
+    flags.push('Missing internship details');
+    score += 10;
+  }
+
+  // Determine risk level
+  if (score <= 30) {
+    riskLevel = 'Low';
+  } else if (score <= 60) {
+    riskLevel = 'Medium';
+  } else {
+    riskLevel = 'High';
+  }
+
+  // Update risk score
+  riskScore = score;
+
+  // Update risk meter
+  riskMeterChart.data.datasets[0].data = [riskScore, 100 - riskScore];
+  riskMeterChart.data.datasets[0].backgroundColor = riskLevel === 'Low' ? ['#28a745', '#dee2e6']
+    : riskLevel === 'Medium' ? ['#ffc107', '#dee2e6']
+    : ['#dc3545', '#dee2e6'];
+  riskMeterChart.update();
+
+  // Update badge
+  const badge = document.getElementById('riskLevelBadge');
+  badge.textContent = riskLevel;
+  badge.className = 'badge ' + (riskLevel === 'Low' ? 'bg-success' : riskLevel === 'Medium' ? 'bg-warning' : 'bg-danger');
+
+  // Update risk score
+  document.getElementById('riskScore').textContent = riskScore;
+
+  // Update summary
+  document.getElementById('verificationSummary').textContent = `
+    Company: ${companyName}, Role: ${role}, Duration: ${duration} months, Stipend: $${stipend}, Fee: ${applicationFee}
+  `;
+
+  // Update flags
+  const flagsList = document.getElementById('warningFlags');
+  flagsList.innerHTML = '';
+  flags.forEach(flag => {
+    const li = document.createElement('li');
+    li.textContent = flag;
+    flagsList.appendChild(li);
+  });
+
+  // Update recommendations
+  const recList = document.getElementById('recommendations');
+  recList.innerHTML = '';
+  if (riskLevel === 'Low') {
+    recList.innerHTML = '<li>Internship appears legitimate. Proceed with confidence.</li>';
+  } else if (riskLevel === 'Medium') {
+    recList.innerHTML = '<li>Verify company details before proceeding.</li>';
+  } else {
+    recList.innerHTML = '<li>High risk detected. Be cautious and verify thoroughly.</li>';
+  }
+
+  // Show results
+  document.getElementById('results').classList.remove('d-none');
+  // Scroll to results
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
